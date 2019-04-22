@@ -121,15 +121,20 @@ $tasks = [
 
                 <table class="tasks">
                     <?php foreach ($tasks as $task): ?>
-                        <?php if (($task['done'] === false) || ($show_complete_tasks !== 0)): ?>
-                            <tr class="tasks__item task <?php if($task['done']): ?>task--completed<?php endif; ?>">
+                        <?php if ((isset($task['done']) && ($task['done'] === false)) || ($show_complete_tasks !== 0))
+                            : ?>
+                            <tr class="tasks__item task <?php if(isset($task['done']) && $task['done']):
+                                ?>task--completed<?php endif; ?>">
                                 <td class="task__select">
                                     <label class="checkbox task__checkbox">
-                                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox"
-                                               value="" <?php if($task['done'] === true): ?>checked<?php endif;
-                                               ?>>
+                                        <input class="checkbox__input visually-hidden task__checkbox"
+                                               type="checkbox"
+                                               value=""
+                                               <?php if((isset($task['done']) && $task['done']) === true): ?>checked<?php endif; ?>>
                                         <span class="checkbox__text">
-                                            <?= strip_tags($task['name']) ?>
+                                            <?php if (isset($task['name'])): ?>
+                                                <?= strip_tags($task['name']) ?>
+                                            <?php endif; ?>
                                         </span>
                                     </label>
                                 </td>
@@ -139,7 +144,9 @@ $tasks = [
                                 </td>
 
                                 <td class="task__date">
-                                    <?= strip_tags($task['date']) ?>
+                                    <?php if (isset($task['date'])): ?>
+                                        <?= strip_tags($task['date']) ?>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endif; ?>
