@@ -3,38 +3,38 @@ $show_complete_tasks = rand(0, 1);
 $projects = ['Входящие', 'Учеба', 'Работа', 'Домашние дела', 'Авто'];
 $tasks = [
     [
-        'task' => 'Собеседование в IT компании',
+        'name' => 'Собеседование в IT компании',
         'date' => '01.12.2018',
         'category' => 'Работа',
         'done' => true
     ],
     [
-        'task' => 'Выполнить тестовое задание',
+        'name' => 'Выполнить тестовое задание',
         'date' => '	25.12.2018',
         'category' => 'Работа',
         'done' => false
     ],
     [
-        'task' => 'Сделать задание первого раздела',
+        'name' => 'Сделать задание первого раздела',
         'date' => '21.12.2018',
         'category' => 'Учеба',
         'done' => true
     ],
     [
-        'task' => 'Встреча с другом',
+        'name' => 'Встреча с другом',
         'date' => '	22.12.2018',
         'category' => 'Входящие',
         'done' => false
     ],
     [
-        'task' => 'Купить корм для кота',
-        'date' => 'Нет',
+        'name' => 'Купить корм для кота',
+        'date' => null,
         'category' => 'Домашние дела',
         'done' => false
     ],
     [
-        'task' => 'Заказать пиццу',
-        'date' => 'Нет',
+        'name' => 'Заказать пиццу',
+        'date' => null,
         'category' => 'Домашние дела',
         'done' => false
     ]
@@ -80,10 +80,10 @@ $tasks = [
 
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
-                        <?php foreach ($projects as $key => $projectName): ?>
+                        <?php foreach ($projects as $projectName): ?>
                             <li class="main-navigation__list-item">
                                 <a class="main-navigation__list-item-link" href="#">
-                                    <?= $projectName ?>
+                                    <?= strip_tags($projectName) ?>
                                 </a>
                                 <span class="main-navigation__list-item-count">0</span>
                             </li>
@@ -120,16 +120,16 @@ $tasks = [
                 </div>
 
                 <table class="tasks">
-                    <?php foreach ($tasks as $key => $val): ?>
-                        <?php if (($val['done'] === false) || ($show_complete_tasks !== 0)): ?>
-                            <tr class="tasks__item task <?php if($val['done']): ?>task--completed<?php endif; ?>">
+                    <?php foreach ($tasks as $task): ?>
+                        <?php if (($task['done'] === false) || ($show_complete_tasks !== 0)): ?>
+                            <tr class="tasks__item task <?php if($task['done']): ?>task--completed<?php endif; ?>">
                                 <td class="task__select">
                                     <label class="checkbox task__checkbox">
                                         <input class="checkbox__input visually-hidden task__checkbox" type="checkbox"
-                                               value="<?= $key ?>" <?php if($val['done'] === true): ?>checked<?php endif;
+                                               value="" <?php if($task['done'] === true): ?>checked<?php endif;
                                                ?>>
                                         <span class="checkbox__text">
-                                            <?= $val['task'] ?>
+                                            <?= strip_tags($task['name']) ?>
                                         </span>
                                     </label>
                                 </td>
@@ -139,7 +139,7 @@ $tasks = [
                                 </td>
 
                                 <td class="task__date">
-                                    <?= $val['date'] ?>
+                                    <?= strip_tags($task['date']) ?>
                                 </td>
                             </tr>
                         <?php endif; ?>
