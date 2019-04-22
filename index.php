@@ -38,7 +38,19 @@ $tasks = [
         'category' => 'Домашние дела',
         'done' => false
     ]
-]
+];
+
+function countTasks(array $tasks, $projectName) {
+    $count = 0;
+
+    foreach($tasks as $task) {
+        if (isset($task['category']) && ($task['category'] === $projectName)) {
+            $count++;
+        }
+    }
+
+    return $count;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -85,7 +97,9 @@ $tasks = [
                                 <a class="main-navigation__list-item-link" href="#">
                                     <?= strip_tags($projectName) ?>
                                 </a>
-                                <span class="main-navigation__list-item-count">0</span>
+                                <span class="main-navigation__list-item-count">
+                                    <?= strip_tags(countTasks($tasks, $projectName)) ?>
+                                </span>
                             </li>
                         <?php endforeach; ?>
                     </ul>
