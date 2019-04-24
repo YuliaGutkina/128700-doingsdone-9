@@ -25,8 +25,7 @@
     <?php foreach ($tasks as $task): ?>
         <?php if ((isset($task['done']) && ($task['done'] === false)) || ($showCompleteTasks !== 0))
             : ?>
-            <tr class="tasks__item task <?php if(isset($task['done']) && $task['done']):
-                ?>task--completed<?php endif; ?>">
+            <tr class="tasks__item task <?php if (isset($task['done']) && $task['done']): ?>task--completed<?php endif; ?> <?php  if (isset($task['date']) && (checkExpiration($task['date']) === true)): ?>task--important<?php endif; ?>">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
                         <input class="checkbox__input visually-hidden task__checkbox"
