@@ -1,4 +1,6 @@
 <?php
+define('SECS_IN_HOUR', 3600);
+
 function countTasks(array $tasks, $projectName) {
     $count = 0;
 
@@ -12,11 +14,10 @@ function countTasks(array $tasks, $projectName) {
 }
 
 function checkExpiration($date, $expirationHours = 24) {
-    $SECS_IN_HOUR = 3600;
     $tsDate = strtotime($date);
     $tsNow = time();
     $tsDiff = $tsDate - $tsNow;
-    $hoursDiff = floor($tsDiff / $SECS_IN_HOUR);
+    $hoursDiff = floor($tsDiff / SECS_IN_HOUR);
 
     return ($hoursDiff <= $expirationHours);
 }
