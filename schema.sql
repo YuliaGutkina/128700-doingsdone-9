@@ -1,25 +1,29 @@
-CREATE DATABASE doingsdone
+create database doingsdone
   DEFAULT CHARACTER SET utf8
   DEFAULT COLLATE utf8_general_ci;
-USE doingsdone;
-CREATE TABLE projects (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+
+use doingsdone;
+
+create table projects (
+  id int auto_increment primary key,
   name CHAR(128) NOT NULL,
-  user_id INT NOT NULL
+  user_id int NOT NULL
 );
-CREATE TABLE tasks (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  dt_create DATETIME NOT NULL DEFAULT NOW(),
-  status INT DEFAULT 0,
+
+create table tasks (
+  id int auto_increment primary key,
+  dt_create datetime NOT NULL DEFAULT NOW(),
+  status int DEFAULT 0,
   name CHAR(128) NOT NULL,
   file CHAR(128),
-  deadline DATETIME,
-  project_id INT NOT NULL,
-  user_id INT NOT NULL
+  deadline datetime,
+  project_id int NOT NULL,
+  user_id int NOT NULL
 );
-CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  dt_reg DATETIME NOT NULL DEFAULT NOW(),
+
+create table users (
+  id int auto_increment primary key,
+  dt_reg datetime NOT NULL DEFAULT NOW(),
   email CHAR(128) NOT NULL UNIQUE,
   name CHAR(128) NOT NULL,
   password CHAR(64) NOT NULL
