@@ -20,12 +20,7 @@ CREATE TABLE tasks (
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   dt_reg DATETIME NOT NULL DEFAULT NOW(),
-  email CHAR(128) NOT NULL,
+  email CHAR(128) NOT NULL UNIQUE,
   name CHAR(128) NOT NULL,
   password CHAR(64) NOT NULL
 );
-CREATE UNIQUE INDEX p_name ON projects(name);
-CREATE UNIQUE INDEX email ON users(email);
-CREATE INDEX t_status ON tasks(status);
-CREATE INDEX t_name ON tasks(name);
-CREATE INDEX deadline ON tasks(deadline);
