@@ -35,13 +35,13 @@ insert into tasks set name = 'Заказать пиццу',
 
 # получить список из всех проектов для одного пользователя.
 # Объедините проекты с задачами, чтобы посчитать количество задач в каждом проекте и в дальнейшем выводить эту цифру рядом с именем проекта;
-select p.id, p.name, count(*) from projects p
-inner join tasks t on p.id = t.project_id
+select p.id, p.name, count(t.id) as tasks_count from projects p
+left join tasks t on p.id = t.project_id
 where p.user_id = 1
-group by t.project_id;
+group by p.id;
 
 # получить список из всех задач для одного проекта;
-select * from tasks
+select id, dt_create, status, name, file, deadline, project_id, user_id from tasks
 where project_id = 3;
 
 # пометить задачу как выполненную;
