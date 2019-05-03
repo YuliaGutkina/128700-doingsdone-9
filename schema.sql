@@ -1,31 +1,30 @@
-CREATE DATABASE doingsdone
-  DEFAULT CHARACTER SET utf8
-  DEFAULT COLLATE utf8_general_ci;
-USE doingsdone;
-CREATE TABLE projects (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name CHAR(128) NOT NULL,
-  user_id INT NOT NULL
+create database doingsdone
+  default character set utf8
+  default collate utf8_general_ci;
+
+use doingsdone;
+
+create table projects (
+  id int auto_increment primary key,
+  name char(128) not null,
+  user_id int not null
 );
-CREATE TABLE tasks (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  dt_create DATETIME NOT NULL DEFAULT NOW(),
-  status INT DEFAULT 0,
-  name CHAR(128) NOT NULL,
-  file CHAR(128),
-  deadline DATETIME,
-  project_id INT NOT NULL,
-  user_id INT NOT NULL
+
+create table tasks (
+  id int auto_increment primary key,
+  dt_create datetime not null default now(),
+  status int default 0,
+  name char(128) not null,
+  file char(128),
+  deadline datetime,
+  project_id int not null,
+  user_id int not null
 );
-CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  dt_reg DATETIME NOT NULL DEFAULT NOW(),
-  email CHAR(128) NOT NULL,
-  name CHAR(128) NOT NULL,
-  password CHAR(64) NOT NULL
+
+create table users (
+  id int auto_increment primary key,
+  dt_reg datetime not null default now(),
+  email char(128) not null unique,
+  name char(128) not null,
+  password char(64) not null
 );
-CREATE UNIQUE INDEX p_name ON projects(name);
-CREATE UNIQUE INDEX email ON users(email);
-CREATE INDEX t_status ON tasks(status);
-CREATE INDEX t_name ON tasks(name);
-CREATE INDEX deadline ON tasks(deadline);
