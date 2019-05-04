@@ -38,13 +38,13 @@
 
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
-                        <?php foreach ($projects as $projectName): ?>
+                        <?php foreach ($projects as $project): ?>
                             <li class="main-navigation__list-item">
                                 <a class="main-navigation__list-item-link" href="#">
-                                    <?= strip_tags($projectName) ?>
+                                    <?= strip_tags($project['name']) ?>
                                 </a>
                                 <span class="main-navigation__list-item-count">
-                                    <?= strip_tags(countTasks($tasks, $projectName)) ?>
+                                    <?= strip_tags($project['tasks_count']) ?>
                                 </span>
                             </li>
                         <?php endforeach; ?>

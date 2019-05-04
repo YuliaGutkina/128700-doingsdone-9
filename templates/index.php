@@ -23,15 +23,15 @@
 
 <table class="tasks">
     <?php foreach ($tasks as $task): ?>
-        <?php if ((isset($task['done']) && ($task['done'] === false)) || ($showCompleteTasks !== 0))
+        <?php if ((isset($task['status']) && ($task['status'] === '0')) || ($showCompleteTasks !== 0))
             : ?>
-            <tr class="tasks__item task <?php if (isset($task['done']) && $task['done']): ?>task--completed<?php endif; ?> <?php  if (isset($task['date']) && (checkExpiration($task['date']) === true)): ?>task--important<?php endif; ?>">
+            <tr class="tasks__item task <?php if (isset($task['status']) && $task['status']): ?>task--completed<?php endif; ?> <?php  if (isset($task['deadline']) && (checkExpiration($task['deadline']) === true)): ?>task--important<?php endif; ?>">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
                         <input class="checkbox__input visually-hidden task__checkbox"
                                type="checkbox"
                                value=""
-                               <?php if((isset($task['done']) && $task['done']) === true): ?>checked<?php endif; ?>>
+                               <?php if((isset($task['status']) && $task['status']) === true): ?>checked<?php endif; ?>>
                         <span class="checkbox__text">
                             <?php if (isset($task['name'])): ?>
                                 <?= strip_tags($task['name']) ?>
@@ -41,12 +41,16 @@
                 </td>
 
                 <td class="task__file">
-                    <a class="download-link" href="#">Home.psd</a>
+                    <?php if (isset($task['file'])): ?>
+                        <a class="download-link" href="#">
+                            <?= strip_tags($task['file']) ?>
+                        </a>
+                    <?php endif; ?>
                 </td>
 
                 <td class="task__date">
-                    <?php if (isset($task['date'])): ?>
-                        <?= strip_tags($task['date']) ?>
+                    <?php if (isset($task['deadline'])): ?>
+                        <?= strip_tags($task['deadline']) ?>
                     <?php endif; ?>
                 </td>
             </tr>
