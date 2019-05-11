@@ -98,3 +98,23 @@ function getTasks(int $userId = null, ?int $projectId = null): array
 
     return $result;
 }
+
+function addTask($task, $userId) {
+    $con = DbConnectionProvider::getConnection();
+    $sql = 'insert into tasks set name = ?, project_id = ?, user_id = ?';
+    $taskData = [$task['name'], $task['project'], $userId];
+
+    if (isset($task['file']) && !empty($task['file']))
+    {
+        $sql .= ', file = ?';
+        $taskData[] = $task['file'];
+    }
+
+    if (isset($task['date']) && !empty($task['date']))
+    {
+        $sql .= ', deadline = ?';
+        $taskData[] = $task['date'];
+    }
+
+    dbInsertData($con, $sql, $taskData);
+}

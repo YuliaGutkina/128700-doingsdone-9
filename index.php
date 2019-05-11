@@ -46,8 +46,7 @@ $layoutContent = include_template('layout.php', [
     'pageContent' => $pageContent,
     'pageTitle' => 'Дела в порядке',
     'user' => $user,
-    'projects' => $projects,
-    'tasks' => $tasks
+    'projects' => $projects
 ]);
 
 print($layoutContent);
