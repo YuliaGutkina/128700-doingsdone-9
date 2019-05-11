@@ -1,47 +1,53 @@
 <?php
 date_default_timezone_set('Asia/Jerusalem');
 
+if(file_exists('config.php')) {
+    require_once 'config.php';
+} else {
+    exit('Скопируйте config.default.php в config.php и установите настройки приложения');
+}
+
 require_once('helpers.php');
 require_once('functions.php');
 
-$con = mysqli_connect('127.0.0.1', 'root', '','doingsdone');
-mysqli_set_charset($con, 'utf8');
-
-$userId = 1;
-$userName = 'Константин';
-
 $showCompleteTasks = 1;
 
-$sql = [
-    'projects' => 'select p.id, p.name, count(t.id) as tasks_count '
-                . 'from projects p '
-                . 'left join tasks t on p.id = t.project_id '
-                . 'where p.user_id = ? '
-                . 'group by p.id',
-    'tasks' => 'select * from tasks where user_id = ?'
-];
+$user = getUser(1);
 
-if ($con === false) {
-    print("Ошибка подключения: " . mysqli_connect_error());
-
-} else {
-    $resProjects = mysqli_prepare($con, $sql['projects']);
-    $projects = dbFetchData($con, $sql['projects'], [$userId]);
-
-    $resTasks = mysqli_prepare($con, $sql['tasks']);
-    $tasks = dbFetchData($con, $sql['tasks'], [$userId]);
-
-    $pageContent = include_template('index.php', [
-        'tasks' => $tasks,
-        'showCompleteTasks' => $showCompleteTasks
-    ]);
-    $layoutContent = include_template('layout.php', [
-        'pageContent' => $pageContent,
-        'pageTitle' => 'Дела в порядке',
-        'userName' => $userName,
-        'projects' => $projects,
-        'tasks' => $tasks
-    ]);
-
+if (!isset($user['id']))
+{
+    $layoutContent = include_template('guest.php');
     print($layoutContent);
+
+    die;
 }
+
+$projects = getProjects($user['id']);
+
+if (isset($_GET['id']) && !empty($_GET['id'])) {
+    $tasks = getTasks($user['id'], $_GET['id']);
+
+    if (empty($tasks)) {
+        http_response_code(404);
+    }
+} else if (isset($_GET['id']) && empty($_GET['id'])) {
+    $tasks = [];
+    http_response_code(404);
+} else {
+    $tasks = getTasks($user['id']);
+}
+
+$pageContent = (http_response_code() !== 404) ? include_template('index.php', [
+    'tasks' => $tasks,
+    'showCompleteTasks' => $showCompleteTasks
+]) : '404 - задач не найдено';
+
+$layoutContent = include_template('layout.php', [
+    'pageContent' => $pageContent,
+    'pageTitle' => 'Дела в порядке',
+    'user' => $user,
+    'projects' => $projects,
+    'tasks' => $tasks
+]);
+
+print($layoutContent);
