@@ -12,15 +12,27 @@ require_once('functions.php');
 
 $showCompleteTasks = 1;
 
-$user = getUser(2);
+$user = getUser(1);
+
+if (!isset($user['id']))
+{
+    $layoutContent = include_template('guest.php');
+    print($layoutContent);
+
+    die;
+}
+
 $projects = getProjects($user['id']);
 
-if (isset($_GET['id'])) {
+if (isset($_GET['id']) && !empty($_GET['id'])) {
     $tasks = getTasks($user['id'], $_GET['id']);
 
-    if (empty($tasks) || empty($_GET['id'])) {
+    if (empty($tasks)) {
         http_response_code(404);
     }
+} else if (isset($_GET['id']) && empty($_GET['id'])) {
+    $tasks = [];
+    http_response_code(404);
 } else {
     $tasks = getTasks($user['id']);
 }

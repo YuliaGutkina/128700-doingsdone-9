@@ -3,67 +3,38 @@
 
 <head>
     <meta charset="UTF-8">
-    <title><?= $pageTitle; ?></title>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/flatpickr.min.css">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 
-<body>
+<body class="body-background">
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">
-    <div class="container container--with-sidebar">
+    <div class="container">
         <header class="main-header">
-            <a href="/">
-                <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
+            <a href="#">
+                <img src="../img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
             </a>
 
             <div class="main-header__side">
-                <a class="main-header__side-item button button--plus open-modal" href="pages/form-task.html">Добавить задачу</a>
-
-                <div class="main-header__side-item user-menu">
-                    <div class="user-menu__data">
-                        <?php if(isset($user['name'])): ?>
-                            <p><?= strip_tags($user['name']); ?></p>
-                        <?php endif; ?>
-                        <a href="#">Выйти</a>
-                    </div>
-                </div>
+                <a class="main-header__side-item button button--transparent" href="form-authorization.html">Войти</a>
             </div>
         </header>
 
         <div class="content">
-            <section class="content__side">
-                <h2 class="content__side-heading">Проекты</h2>
+            <section class="welcome">
+                <h2 class="welcome__heading">«Дела в порядке»</h2>
 
-                <nav class="main-navigation">
-                    <ul class="main-navigation__list">
-                        <?php foreach ($projects as $project): ?>
-                            <?php if (isset($project['id'])): ?>
-                                <li class="main-navigation__list-item <?php if(isset($_GET['id']) && (strip_tags($project['id']) === $_GET['id'])): ?>main-navigation__list-item--active<?php endif; ?>">
-                                    <a class="main-navigation__list-item-link" href="/?id=<?= strip_tags($project['id']) ?>">
-                                        <?= strip_tags($project['name']) ?>
-                                    </a>
-                                    <span class="main-navigation__list-item-count">
-                                        <?= strip_tags($project['tasks_count']) ?>
-                                    </span>
-                                </li>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    </ul>
-                </nav>
+                <div class="welcome__text">
+                    <p>«Дела в порядке» — это веб приложение для удобного ведения списка дел. Сервис помогает пользователям не забывать о предстоящих важных событиях и задачах.</p>
 
-                <a class="button button--transparent button--plus content__side-button"
-                   href="pages/form-project.html"
-                   target="project_add">
-                    Добавить проект
-                </a>
+                    <p>После создания аккаунта, пользователь может начать вносить свои дела, деля их по проектам и указывая сроки.</p>
+                </div>
+
+                <a class="welcome__button button" href="register.html">Зарегистрироваться</a>
             </section>
-
-            <main class="content__main">
-               <?= $pageContent; ?>
-            </main>
         </div>
     </div>
 </div>
@@ -75,8 +46,6 @@
 
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
-
-        <a class="main-footer__button button button--plus" href="pages/form-task.html">Добавить задачу</a>
 
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>
@@ -121,13 +90,11 @@
             <span class="visually-hidden">Разработано:</span>
 
             <a href="https://htmlacademy.ru/intensive/php">
-                <img src="img/htmlacademy.svg" alt="HTML Academy" width="118" height="40">
+                <img src="../img/htmlacademy.svg" alt="HTML Academy" width="118" height="40">
             </a>
         </div>
     </div>
 </footer>
 
-<script src="flatpickr.js"></script>
-<script src="script.js"></script>
 </body>
 </html>
