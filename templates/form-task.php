@@ -4,7 +4,7 @@
     <div class="form__row">
         <label class="form__label" for="name">Название <sup>*</sup></label>
 
-        <input class="form__input<?php if (isset($errors) && isset($errors['name'])): ?> form__input--error<?php endif; ?>" type="text" name="name" id="name" value="<?php if(isset($task['name'])): ?><?= strip_tags($task['name']) ?><?php endif; ?>" placeholder="Введите название">
+        <input class="form__input<?php if (isset($errors) && isset($errors['name'])): ?> form__input--error<?php endif; ?>" type="text" name="name" id="name" value="<?= strip_tags($task['name']) ?>" placeholder="Введите название">
 
         <?php if (isset($errors) && isset($errors['name'])): ?>
             <p class="form__message"><?= $errors['name'] ?></p>
@@ -17,7 +17,7 @@
         <select class="form__input form__input--select<?php if (isset($errors) && isset($errors['project'])): ?> form__input--error<?php endif; ?>" name="project" id="project">
             <?php foreach ($projects as $project): ?>
                 <?php if (isset($project['id'])): ?>
-                    <option value="<?= strip_tags($project['id']) ?>" <?php if(isset($task['project']) && ($task['project'] === strval($project['id']))): ?>selected<?php endif; ?>><?= strip_tags($project['name']) ?></option>
+                    <option value="<?= strip_tags($project['id']) ?>" <?php if($task['project'] === strval($project['id'])): ?>selected<?php endif; ?>><?= strip_tags($project['name']) ?></option>
                 <?php endif; ?>
             <?php endforeach; ?>
         </select>
@@ -30,7 +30,7 @@
     <div class="form__row">
         <label class="form__label" for="date">Дата выполнения</label>
 
-        <input class="form__input form__input--date<?php if (isset($errors) && isset($errors['date'])): ?> form__input--error<?php endif; ?>" type="text" name="date" id="date" value="<?php if(isset($task['date'])): ?><?= strip_tags($task['date']) ?><?php endif; ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
+        <input class="form__input form__input--date<?php if (isset($errors) && isset($errors['date'])): ?> form__input--error<?php endif; ?>" type="text" name="date" id="date" value="<?= strip_tags($task['date']) ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
 
         <?php if (isset($errors) && isset($errors['date'])): ?>
             <p class="form__message"><?= $errors['date'] ?></p>
@@ -41,7 +41,7 @@
         <label class="form__label" for="file">Файл</label>
 
         <div class="form__input-file">
-            <input class="visually-hidden" type="file" name="file" id="file" value="<?php if(isset($task['file'])): ?><?= strip_tags($task['file']) ?><?php endif; ?>">
+            <input class="visually-hidden" type="file" name="file" id="file" value="">
 
             <label class="button button--transparent" for="file">
                 <span>Выберите файл</span>

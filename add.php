@@ -1,41 +1,18 @@
 <?php
-date_default_timezone_set('Asia/Jerusalem');
-
-if(file_exists('config.php')) {
-    require_once 'config.php';
-} else {
-    exit('Скопируйте config.default.php в config.php и установите настройки приложения');
-}
-
-require_once('helpers.php');
-require_once('functions.php');
-
-$showCompleteTasks = 1;
-
-$user = getUser(1);
-
-if (!isset($user['id']))
-{
-    $layoutContent = include_template('guest.php');
-    print($layoutContent);
-
-    die;
-}
+require_once 'init.php';
 
 $projects = getProjects($user['id']);
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $task = $_POST;
-
     $required = ['name', 'project'];
+    $errors = [];
 
     $task = [
-        'name' => $_POST['name'],
-        'project' => $_POST['project'],
-        'date' => $_POST['date']
+        'name' => $_POST['name'] ?? null,
+        'project' => $_POST['project'] ?? null,
+        'date' => $_POST['date'] ?? null
     ];
-
-    $errors = [];
 
     foreach ($required as $field) {
         if (empty($_POST[$field])) {
@@ -43,20 +20,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    foreach ($_POST as $key => $value) {
-        if ($key === "date") {
-            if (!empty($value) && !is_date_valid($value)) {
-                $errors[$key] = 'Введите дату в корректном формате';
-            }
-        }
+    if (!empty($task['date']) && !is_date_valid($task['date'])) {
+        $errors['date'] = 'Введите дату в корректном формате';
+    }
+
+    if (!empty($task['date']) && !isDateFuture($task['date'])) {
+        $errors['date'] = 'Введите не прошедшую дату';
     }
 
     if (isset($_FILES['file'])) {
-        $fileName = $_FILES['file']['name'];
-        $filePath = __DIR__ . '/uploads/';
-        $fileUrl = '/uploads/' . $fileName;
-        move_uploaded_file($_FILES['file']['tmp_name'], $filePath . $fileName);
-        $task['file'] = $fileName;
+        if (isset($_FILES['file']['error']) &&($_FILES['file']['error'] === UPLOAD_ERR_OK)) {
+            if (!count($errors)) {
+                if (isset($_FILES['file']['name'])) {
+                    $fileName = $_FILES['file']['name'];
+                    $filePath = __DIR__ . '/uploads/';
+                    $fileUrl = '/uploads/' . $fileName;
+                }
+
+                move_uploaded_file($_FILES['file']['tmp_name'], $filePath . $fileName);
+                $task['file'] = $fileName;
+            }
+        } else if (isset($_FILES['file']['error']) && ($_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE)) {
+            $errors['file'] = 'Не удалось загрузить файл';
+        }
     }
 
     if (count($errors)) {
