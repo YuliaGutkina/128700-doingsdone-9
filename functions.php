@@ -99,31 +99,16 @@ function getTasks(int $userId = null, ?int $projectId = null): array
     return $result;
 }
 
-function addTask($task, $userId) {
+function addTask($taskName, $project, $userId, $file, $deadline) {
     $con = DbConnectionProvider::getConnection();
     $sql = 'insert into tasks set name = ?, project_id = ?, user_id = ?, file = ?, deadline = ?';
-    $taskData = [$task['name'], $task['project'], $userId];
 
-    if (isset($task['file']) && !empty($task['file'])) {
-        $taskData[] = $task['file'];
-    } else {
-        $taskData[] = null;
-    }
-
-    if (isset($task['date']) && !empty($task['date'])) {
-        $taskData[] = $task['date'];
-    } else {
-        $taskData[] = null;
-    }
-
-    dbInsertData($con, $sql, $taskData);
+    dbInsertData($con, $sql, [$taskName, $project, $userId, $file, $deadline]);
 }
 
 function isDateFuture(string $date) : bool {
     $today = strtotime('00:00:00');
     $date = strtotime($date);
-
-    var_dump($today, $date);
 
     return ($date >= $today);
 }

@@ -28,18 +28,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['date'] = 'Введите не прошедшую дату';
     }
 
-    if (isset($_FILES['file']) && isset($_FILES['file']['error'])) {
-        if (($_FILES['file']['error'] === UPLOAD_ERR_OK)) {
-            if (isset($_FILES['file']['name'])&& isset($_FILES['file']['tmp_name']) && !count($errors)) {
-                $fileName = $_FILES['file']['name'];
-                $filePath = __DIR__ . '/uploads/';
-                $fileUrl = '/uploads/' . $fileName;
-                move_uploaded_file($_FILES['file']['tmp_name'], $filePath . $fileName);
-                $task['file'] = $fileName;
-            }
-        } else if ($_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE) {
-            $errors['file'] = 'Не удалось загрузить файл';
+    if (isset($_FILES['file']) && isset($_FILES['file']['error']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+        if ((count($errors) === 0) && isset($_FILES['file']['name']) && isset($_FILES['file']['tmp_name'])) {
+            $fileName = $_FILES['file']['name'];
+            $filePath = __DIR__ . '/uploads/';
+            $fileUrl = '/uploads/' . $fileName;
+            move_uploaded_file($_FILES['file']['tmp_name'], $filePath . $fileName);
+            $task['file'] = $fileName;
         }
+    } else if (isset($_FILES['file']) && isset($_FILES['file']['error']) && $_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE) {
+        $errors['file'] = 'Не удалось загрузить файл';
     }
 
     if (count($errors)) {
@@ -49,7 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'task' => $task
         ]);
     } else {
-        addTask($task, $user['id']);
+        $task['file'] = ($task['file'] && !empty($task['file'])) ? $task['file'] : null;
+        $task['date'] = ($task['date'] && !empty($task['date'])) ? $task['date'] : null;
+
+        addTask($task['name'], $task['project'], $user['id'], $task['file'], $task['date']);
         header('Location: /index.php');
     }
 } else {
