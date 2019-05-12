@@ -28,19 +28,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['date'] = 'Введите не прошедшую дату';
     }
 
-    if (isset($_FILES['file'])) {
-        if (isset($_FILES['file']['error']) &&($_FILES['file']['error'] === UPLOAD_ERR_OK)) {
-            if (!count($errors)) {
-                if (isset($_FILES['file']['name'])) {
-                    $fileName = $_FILES['file']['name'];
-                    $filePath = __DIR__ . '/uploads/';
-                    $fileUrl = '/uploads/' . $fileName;
-                }
-
+    if (isset($_FILES['file']) && isset($_FILES['file']['error'])) {
+        if (($_FILES['file']['error'] === UPLOAD_ERR_OK)) {
+            if (isset($_FILES['file']['name'])&& isset($_FILES['file']['tmp_name']) && !count($errors)) {
+                $fileName = $_FILES['file']['name'];
+                $filePath = __DIR__ . '/uploads/';
+                $fileUrl = '/uploads/' . $fileName;
                 move_uploaded_file($_FILES['file']['tmp_name'], $filePath . $fileName);
                 $task['file'] = $fileName;
             }
-        } else if (isset($_FILES['file']['error']) && ($_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE)) {
+        } else if ($_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE) {
             $errors['file'] = 'Не удалось загрузить файл';
         }
     }
