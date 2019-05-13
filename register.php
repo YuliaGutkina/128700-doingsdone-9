@@ -4,6 +4,7 @@ require_once 'init.php';
 $pageContent = include_template('register.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $required = ['email', 'password', 'name'];
     $errors = [];
     $user = [
         'email' => $_POST['email'] ?? null,
@@ -11,17 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'name' => $_POST['name'] ?? null
     ];
 
-    foreach ($_POST as $key => $value) {
-        if (($key == "email") && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            $errors[$key] = 'E-mail введён некорректно';
+    if (!empty($_POST['email'])) {
+        if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = 'E-mail введён некорректно';
         }
 
-        if (($key == "email") && checkIfUserExist($value)) {
-            $errors[$key] = 'Пользователь с эти e-mail уже существует';
-        }
-
-        if (empty($_POST[$key])) {
-            $errors[$key] = 'Это поле надо заполнить';
+        if (checkIfUserExist($_POST['email'])) {
+            $errors['email'] = 'Пользователь с эти e-mail уже существует';
         }
     }
 
