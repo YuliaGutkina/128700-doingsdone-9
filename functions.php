@@ -106,9 +106,28 @@ function addTask($taskName, $project, $userId, $file, $deadline) {
     dbInsertData($con, $sql, [$taskName, $project, $userId, $file, $deadline]);
 }
 
-function isDateFuture(string $date) : bool {
+function checkIfDateFuture(string $date) : bool {
     $today = strtotime('00:00:00');
     $date = strtotime($date);
 
     return ($date >= $today);
+}
+
+function addUser($email, $password, $name) {
+    $con = DbConnectionProvider::getConnection();
+    $sql = 'insert into users set email = ?, password = ?, name = ?';
+
+    $email = strtolower($email);
+    $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+    dbInsertData($con, $sql, [$email, $passwordHash, $name]);
+}
+
+function checkIfUserExist($email) {
+    $con = DbConnectionProvider::getConnection();
+    $sql = 'select email from users where email = ?';
+
+    $result = dbFetchData($con, $sql, [$email]);
+
+    return !empty($result);
 }
