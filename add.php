@@ -4,10 +4,8 @@ require_once 'init.php';
 $projects = getProjects($user['id']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $task = $_POST;
     $required = ['name', 'project'];
     $errors = [];
-
     $task = [
         'name' => $_POST['name'] ?? null,
         'project' => $_POST['project'] ?? null,
@@ -24,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['date'] = 'Введите дату в корректном формате';
     }
 
-    if (!empty($task['date']) && !isDateFuture($task['date'])) {
+    if (!empty($task['date']) && !checkIfDateFuture($task['date'])) {
         $errors['date'] = 'Введите не прошедшую дату';
     }
 
