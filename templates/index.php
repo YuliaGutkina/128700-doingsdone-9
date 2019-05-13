@@ -42,7 +42,7 @@
 
                 <td class="task__file">
                     <?php if (isset($task['file'])): ?>
-                        <a class="download-link" href="#">
+                        <a class="download-link" href="/uploads/<?= strip_tags($task['file']) ?>">
                             <?= strip_tags($task['file']) ?>
                         </a>
                     <?php endif; ?>
@@ -50,7 +50,7 @@
 
                 <td class="task__date">
                     <?php if (isset($task['deadline'])): ?>
-                        <?= strip_tags($task['deadline']) ?>
+                        <?= date('Y-m-d', strtotime(strip_tags($task['deadline']))) ?>
                     <?php endif; ?>
                 </td>
             </tr>
