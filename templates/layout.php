@@ -3,17 +3,21 @@
 
 <head>
     <meta charset="UTF-8">
-    <title><?= $pageTitle; ?></title>
+    <title>
+        <?php if(isset($pageTitle)): ?>
+            <?= $pageTitle; ?>
+        <?php endif; ?>
+    </title>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/flatpickr.min.css">
 </head>
 
-<body>
+<body class="<?php if(isset($guestContent)): ?>body-background<?php endif; ?>">
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">
-    <div class="container container--with-sidebar">
+    <div class="container<?php if(!isset($guestContent)): ?> container--with-sidebar<?php endif; ?>">
         <header class="main-header">
             <a href="/">
                 <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
