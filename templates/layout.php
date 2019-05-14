@@ -21,59 +21,63 @@
 
             <div class="main-header__side">
                 <?php if(isset($_SESSION['user'])): ?>
-                    <a class="main-header__side-item button button--plus open-modal" href="/add.php">Добавить задачу</a>
+                    <a class="main-header__side-item button button--plus open-modal" href="/add-task.php">Добавить задачу</a>
 
                     <div class="main-header__side-item user-menu">
                         <div class="user-menu__data">
                             <?php if(isset($user['name'])): ?>
                                 <p><?= strip_tags($user['name']); ?></p>
                             <?php endif; ?>
-                            <a href="#">Выйти</a>
+                            <a href="/logout.php">Выйти</a>
                         </div>
                     </div>
                 <?php else: ?>
-                    <a class="main-header__side-item button button--transparent" href="form-authorization.html">Войти</a>
+                    <a class="main-header__side-item button button--transparent" href="/auth.php">Войти</a>
                 <?php endif; ?>
             </div>
         </header>
 
         <div class="content">
-            <section class="content__side">
-                <?php if(isset($_SESSION['user'])): ?>
-                    <h2 class="content__side-heading">Проекты</h2>
+            <?php if(isset($guestContent)): ?>
+                <?= $guestContent ?>
+            <?php else: ?>
+                <section class="content__side">
+                    <?php if(isset($_SESSION['user'])): ?>
+                        <h2 class="content__side-heading">Проекты</h2>
 
-                    <nav class="main-navigation">
-                        <ul class="main-navigation__list">
-                            <?php foreach ($projects as $project): ?>
-                                <?php if (isset($project['id'])): ?>
-                                    <li class="main-navigation__list-item <?php if(isset($_GET['id']) && (strip_tags($project['id']) === $_GET['id'])): ?>main-navigation__list-item--active<?php endif; ?>">
-                                        <a class="main-navigation__list-item-link" href="/?id=<?= strip_tags($project['id']) ?>">
-                                            <?= strip_tags($project['name']) ?>
-                                        </a>
-                                        <span class="main-navigation__list-item-count">
+                        <nav class="main-navigation">
+                            <ul class="main-navigation__list">
+                                <?php foreach ($projects as $project): ?>
+                                    <?php if (isset($project['id'])): ?>
+                                        <li class="main-navigation__list-item <?php if(isset($_GET['id']) && (strip_tags($project['id']) === $_GET['id'])): ?>main-navigation__list-item--active<?php endif; ?>">
+                                            <a class="main-navigation__list-item-link" href="/?id=<?= strip_tags($project['id']) ?>">
+                                                <?= strip_tags($project['name']) ?>
+                                            </a>
+                                            <span class="main-navigation__list-item-count">
                                         <?= strip_tags($project['tasks_count']) ?>
                                     </span>
-                                    </li>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </ul>
-                    </nav>
+                                        </li>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </ul>
+                        </nav>
 
-                    <a class="button button--transparent button--plus content__side-button"
-                       href="pages/form-project.html"
-                       target="project_add">
-                        Добавить проект
-                    </a>
-                <?php else: ?>
-                    <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
+                        <a class="button button--transparent button--plus content__side-button"
+                           href="pages/form-project.html"
+                           target="project_add">
+                            Добавить проект
+                        </a>
+                    <?php else: ?>
+                        <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
 
-                    <a class="button button--transparent content__side-button" href="form-authorization.html">Войти</a>
-                <?php endif; ?>
-            </section>
+                        <a class="button button--transparent content__side-button" href="/auth.php">Войти</a>
+                    <?php endif; ?>
+                </section>
 
-            <main class="content__main">
-               <?= $pageContent; ?>
-            </main>
+                <main class="content__main">
+                    <?= $pageContent; ?>
+                </main>
+            <?php endif;?>
         </div>
     </div>
 </div>
@@ -86,7 +90,7 @@
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
         <?php if(isset($_SESSION['user'])): ?>
-            <a class="main-footer__button button button--plus" href="/add.php">Добавить задачу</a>
+            <a class="main-footer__button button button--plus" href="/add-task.php">Добавить задачу</a>
         <?php endif; ?>
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>

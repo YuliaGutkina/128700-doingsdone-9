@@ -51,21 +51,19 @@ function dbInsertData($link, $sql, $data = []) {
     return $result;
 }
 
-function getUser(int $id): ?array
-{
+function getUser($email): ?array {
     $con = DbConnectionProvider::getConnection();
 
-    $sql = 'select id, dt_reg, email, name ';
+    $sql = 'select id, dt_reg, email, name, password ';
     $sql .= 'from users ';
-    $sql .= 'where id = ?';
+    $sql .= 'where email = ?';
 
-    $result = dbFetchData($con, $sql, [$id]);
+    $result = dbFetchData($con, $sql, [$email]);
 
     return $result[0] ?? null;
 }
 
-function getProjects(int $userId): ?array
-{
+function getProjects($userId): ?array {
     $con = DbConnectionProvider::getConnection();
 
     $sql = 'select p.id, p.name, count(t.id) as tasks_count ';
@@ -79,8 +77,7 @@ function getProjects(int $userId): ?array
     return $result;
 }
 
-function getTasks(int $userId = null, ?int $projectId = null): array
-{
+function getTasks(int $userId = null, ?int $projectId = null): array {
     $con = DbConnectionProvider::getConnection();
 
     $sql = 'select id, dt_create, status, name, file, deadline, project_id, user_id ';

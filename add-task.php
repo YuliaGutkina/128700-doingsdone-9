@@ -1,6 +1,15 @@
 <?php
 require_once 'init.php';
 
+session_start();
+
+if (!isset($_SESSION['user'])) {
+    header('Location: index.php');
+
+    exit();
+}
+
+$user = $_SESSION['user'];
 $projects = getProjects($user['id']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -39,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (count($errors)) {
-        $pageContent = include_template('form-task.php', [
+        $pageContent = include_template('add-task.php', [
             'projects' => $projects,
             'errors' => $errors,
             'task' => $task
@@ -52,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: /index.php');
     }
 } else {
-    $pageContent = include_template('form-task.php', ['projects' => $projects]);
+    $pageContent = include_template('add-task.php', ['projects' => $projects]);
 }
 
 $layoutContent = include_template('layout.php', [

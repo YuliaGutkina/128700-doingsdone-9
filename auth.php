@@ -1,13 +1,14 @@
 <?php
 require_once 'init.php';
 
+session_start();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $required = ['email', 'password', 'name'];
+    $required = ['email', 'password'];
     $errors = [];
     $user = [
         'email' => $_POST['email'] ?? null,
-        'password' => $_POST['password'] ?? null,
-        'name' => $_POST['name'] ?? null
+        'password' => $_POST['password'] ?? null
     ];
 
     if (!empty($_POST['email'])) {
@@ -15,8 +16,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors['email'] = 'E-mail введён некорректно';
         }
 
-        if (checkIfUserExist($_POST['email'])) {
-            $errors['email'] = 'Пользователь с эти e-mail уже существует';
+        if (!checkIfUserExist($_POST['email'])) {
+            $errors['email'] = 'Пользователя с этим e-mail не существует';
+        }
+    }
+
+    if (!empty($_POST['password'])) {
+        if (!password_verify($_POST['password'], getUser($_POST['email'])['password'])) {
+            $errors['password'] = 'Пароль неверный';
         }
     }
 
@@ -27,15 +34,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (count($errors)) {
-        $pageContent = include_template('register.php', [
+        $pageContent = include_template('auth.php', [
             'errors' => $errors
         ]);
+
     } else {
-        addUser($_POST['email'], $_POST['password'], $_POST['name']);
         header('Location: /index.php');
+
+        $_SESSION['user'] = getUser($_POST['email']);
     }
+
 } else {
-    $pageContent = include_template('register.php');
+    $pageContent = include_template('auth.php');
 }
 
 $layoutContent = include_template('layout.php', [
