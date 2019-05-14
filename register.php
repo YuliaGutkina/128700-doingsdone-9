@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (checkIfUserExist($_POST['email'])) {
-            $errors['email'] = 'Пользователь с эти e-mail уже существует';
+            $errors['email'] = 'Пользователь с таким e-mail уже существует';
         }
     }
 
@@ -30,10 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pageContent = include_template('register.php', [
             'errors' => $errors
         ]);
+
     } else {
         addUser($_POST['email'], $_POST['password'], $_POST['name']);
         header('Location: /index.php');
     }
+
 } else {
     $pageContent = include_template('register.php');
 }

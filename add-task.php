@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             move_uploaded_file($_FILES['file']['tmp_name'], $filePath . $fileName);
             $task['file'] = $fileName;
         }
+
     } else if (isset($_FILES['file']) && isset($_FILES['file']['error']) && $_FILES['file']['error'] !== UPLOAD_ERR_NO_FILE) {
         $errors['file'] = 'Не удалось загрузить файл';
     }
@@ -53,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'errors' => $errors,
             'task' => $task
         ]);
+
     } else {
         $task['file'] = ($task['file'] && !empty($task['file'])) ? $task['file'] : null;
         $task['date'] = ($task['date'] && !empty($task['date'])) ? $task['date'] : null;
@@ -60,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         addTask($task['name'], $task['project'], $user['id'], $task['file'], $task['date']);
         header('Location: /index.php');
     }
+
 } else {
     $pageContent = include_template('add-task.php', ['projects' => $projects]);
 }
