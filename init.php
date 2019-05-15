@@ -12,11 +12,4 @@ require_once('functions.php');
 
 $showCompleteTasks = 1;
 
-$user = getUser(1);
-
-if (!isset($user['id'])) {
-    $layoutContent = include_template('guest.php');
-    print($layoutContent);
-
-    die;
-}
+session_start();
