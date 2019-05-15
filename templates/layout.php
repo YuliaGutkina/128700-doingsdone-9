@@ -36,7 +36,11 @@
                         </div>
                     </div>
                 <?php else: ?>
-                    <a class="main-header__side-item button button--transparent" href="/auth.php">Войти</a>
+                    <?php if(isset($isAuthPage)): ?>
+                        <a class="main-header__side-item button button--transparent" href="/register.php">Зарегистрироваться</a>
+                    <?php else: ?>
+                        <a class="main-header__side-item button button--transparent" href="/auth.php">Войти</a>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
         </header>
