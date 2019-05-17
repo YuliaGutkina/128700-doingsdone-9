@@ -18,13 +18,13 @@ class DbConnectionProvider {
     }
 }
 
-function checkExpiration($date, $expirationHours = 24) {
+function checkExpiration($date) {
     $tsDate = strtotime($date);
     $tsNow = time();
     $tsDiff = $tsDate - $tsNow;
     $hoursDiff = floor($tsDiff / SECS_IN_HOUR);
 
-    return ($hoursDiff <= $expirationHours);
+    return $hoursDiff;
 }
 
 function dbFetchData($link, $sql, $data = []) {
@@ -77,7 +77,7 @@ function getProjects($userId): ?array {
     return $result;
 }
 
-function getTasks(int $userId = null, ?int $projectId = null): array {
+function getTasks(int $userId = null, ?int $projectId = null, string $taskDate = null): array {
     $con = DbConnectionProvider::getConnection();
 
     $sql = 'select id, dt_create, status, name, file, deadline, project_id, user_id ';
@@ -89,6 +89,20 @@ function getTasks(int $userId = null, ?int $projectId = null): array {
     if ($projectId !== null) {
         $sql .= ' and project_id = ?';
         $parameters[] = $projectId;
+    }
+
+    if ($taskDate !== null) {
+        if ($taskDate === 'today') {
+            $sql .= ' and date(deadline) = date(now())';
+        }
+
+        if ($taskDate === 'tomorrow') {
+            $sql .= ' and date(deadline) = date(now() + interval 1 day)';
+        }
+
+        if ($taskDate === 'last') {
+            $sql .= ' and date(deadline) < date(now())';
+        }
     }
 
     $result = dbFetchData($con, $sql, $parameters);
