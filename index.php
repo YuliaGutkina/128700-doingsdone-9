@@ -17,25 +17,31 @@ if (!isset($_SESSION['user'])) {
 $user = $_SESSION['user'];
 $projects = getProjects($user['id']);
 
-if (isset($_GET['id']) && !empty($_GET['id'])) {
-    $tasks = getTasks($user['id'], $_GET['id']);
-
-    if (empty($tasks)) {
-        http_response_code(404);
-    }
-
-} else if (isset($_GET['id']) && empty($_GET['id'])) {
-    $tasks = [];
-    http_response_code(404);
-
-} else {
-    $tasks = getTasks($user['id']);
+if (isset($_GET['task_id'])) {
+    switchTaskStatus($_GET['task_id']);
 }
 
-$pageContent = (http_response_code() !== 404) ? include_template('index.php', [
+$projectId = $_GET['id'] ?? null;
+$taskDate = $_GET['date'] ?? null;
+
+$tasks = getTasks($user['id'], $projectId, $taskDate);
+
+if (isset($_GET['id']) && empty($_GET['id'])) {
+    http_response_code(404);
+}
+
+if (isset($_GET['date']) && empty($_GET['date'])) {
+    http_response_code(404);
+}
+
+if (empty($tasks)) {
+    http_response_code(404);
+}
+
+$pageContent = include_template('index.php', [
     'tasks' => $tasks,
     'showCompleteTasks' => $showCompleteTasks
-]) : '404 - задач не найдено';
+]);
 
 $layoutContent = include_template('layout.php', [
     'pageContent' => $pageContent,

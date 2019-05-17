@@ -9,9 +9,9 @@
 <div class="tasks-controls">
     <nav class="tasks-switch">
         <a href="/" class="tasks-switch__item tasks-switch__item--active">Все задачи</a>
-        <a href="/" class="tasks-switch__item">Повестка дня</a>
-        <a href="/" class="tasks-switch__item">Завтра</a>
-        <a href="/" class="tasks-switch__item">Просроченные</a>
+        <a href="/?date=today" class="tasks-switch__item">Повестка дня</a>
+        <a href="/?date=tomorrow" class="tasks-switch__item">Завтра</a>
+        <a href="/?date=last" class="tasks-switch__item">Просроченные</a>
     </nav>
 
     <label class="checkbox">
@@ -25,12 +25,12 @@
     <?php foreach ($tasks as $task): ?>
         <?php if ((isset($task['status']) && ($task['status'] === '0')) || ($showCompleteTasks !== 0))
             : ?>
-            <tr class="tasks__item task <?php if (isset($task['status']) && $task['status']): ?>task--completed<?php endif; ?> <?php  if (isset($task['deadline']) && (checkExpiration($task['deadline']) === true)): ?>task--important<?php endif; ?>">
+            <tr class="tasks__item task <?php if (isset($task['status']) && $task['status']): ?>task--completed<?php endif; ?> <?php  if (isset($task['deadline']) && (checkExpiration($task['deadline']) < 0)): ?>task--important<?php endif; ?>">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
                         <input class="checkbox__input visually-hidden task__checkbox"
                                type="checkbox"
-                               value=""
+                               value="<?php if (isset($task['id'])): ?><?= $task['id'] ?><?php endif; ?>"
                                <?php if((isset($task['status']) && $task['status']) === true): ?>checked<?php endif; ?>>
                         <span class="checkbox__text">
                             <?php if (isset($task['name'])): ?>
