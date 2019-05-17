@@ -103,6 +103,13 @@ function addTask($taskName, $project, $userId, $file, $deadline) {
     dbInsertData($con, $sql, [$taskName, $project, $userId, $file, $deadline]);
 }
 
+function addProject($projectName, $userId) {
+    $con = DbConnectionProvider::getConnection();
+    $sql = 'insert into projects set name = ?, user_id = ?';
+
+    dbInsertData($con, $sql, [$projectName, $userId]);
+}
+
 function checkIfDateFuture(string $date) : bool {
     $today = strtotime('00:00:00');
     $date = strtotime($date);
@@ -127,4 +134,36 @@ function checkIfUserExist($email) {
     $result = dbFetchData($con, $sql, [$email]);
 
     return !empty($result);
+}
+
+function checkIfProjectExist($userId, $projectName) {
+    $con = DbConnectionProvider::getConnection();
+    $sql = 'select id from projects where name = ? and user_id = ?';
+
+    $result = dbFetchData($con, $sql, [$projectName, $userId]);
+
+    return !empty($result);
+}
+
+function getTaskStatus($taskId) {
+    $con = DbConnectionProvider::getConnection();
+    $sql = 'select status from tasks where id = ?';
+
+    $result = dbFetchData($con, $sql, [$taskId]);
+    $status = null;
+
+    if (count($result)) {
+        $status = ($result[0]['status'] === 1) ? 0 : 1;
+    }
+
+    return $status;
+}
+
+function switchTaskStatus($taskId) {
+    $con = DbConnectionProvider::getConnection();
+    $sql = "update tasks set status = ? where id = ?";
+
+    $status = getTaskStatus($taskId);
+
+    dbInsertData($con, $sql, [$status, $taskId]);
 }

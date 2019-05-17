@@ -30,7 +30,7 @@
                     <label class="checkbox task__checkbox">
                         <input class="checkbox__input visually-hidden task__checkbox"
                                type="checkbox"
-                               value=""
+                               value="<?php if (isset($task['id'])): ?><?= $task['id'] ?><?php endif; ?>"
                                <?php if((isset($task['status']) && $task['status']) === true): ?>checked<?php endif; ?>>
                         <span class="checkbox__text">
                             <?php if (isset($task['name'])): ?>

@@ -71,7 +71,7 @@
                         </nav>
 
                         <a class="button button--transparent button--plus content__side-button"
-                           href="pages/form-project.html"
+                           href="/add-project.php"
                            target="project_add">
                             Добавить проект
                         </a>

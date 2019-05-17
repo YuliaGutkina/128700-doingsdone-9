@@ -17,6 +17,10 @@ if (!isset($_SESSION['user'])) {
 $user = $_SESSION['user'];
 $projects = getProjects($user['id']);
 
+if (isset($_GET['task_id'])) {
+    switchTaskStatus($_GET['task_id']);
+}
+
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $tasks = getTasks($user['id'], $_GET['id']);
 
