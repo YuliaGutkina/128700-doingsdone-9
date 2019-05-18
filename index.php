@@ -23,8 +23,9 @@ if (isset($_GET['task_id'])) {
 
 $projectId = $_GET['id'] ?? null;
 $taskDate = $_GET['date'] ?? null;
+$search = $_GET['search'] ?? null;
 
-$tasks = getTasks($user['id'], $projectId, $taskDate);
+$tasks = getTasks($user['id'], $projectId, $taskDate, $search);
 
 if (isset($_GET['id']) && empty($_GET['id'])) {
     http_response_code(404);

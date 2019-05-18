@@ -77,7 +77,7 @@ function getProjects($userId): ?array {
     return $result;
 }
 
-function getTasks(int $userId = null, ?int $projectId = null, string $taskDate = null): array {
+function getTasks(int $userId = null, ?int $projectId = null, string $taskDate = null, $search = null): array {
     $con = DbConnectionProvider::getConnection();
 
     $sql = 'select id, dt_create, status, name, file, deadline, project_id, user_id ';
@@ -103,6 +103,11 @@ function getTasks(int $userId = null, ?int $projectId = null, string $taskDate =
         if ($taskDate === 'last') {
             $sql .= ' and date(deadline) < date(now())';
         }
+    }
+
+    if (($search !== null) && (!empty($search))) {
+        $sql .= ' and match(name) against(? in boolean mode)';
+        $parameters[] = $search;
     }
 
     $result = dbFetchData($con, $sql, $parameters);
