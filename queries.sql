@@ -53,3 +53,7 @@ where id = 6;
 update tasks
 set name = 'Купить корм для кошки'
 where id = 5;
+
+# создание полнотекстового индекса для поля «название» в таблице задач
+create fulltext index tasks_ft_search
+on tasks(name);
