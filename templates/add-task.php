@@ -4,9 +4,9 @@
     <div class="form__row">
         <label class="form__label" for="name">Название <sup>*</sup></label>
 
-        <input class="form__input<?php if (isset($errors) && isset($errors['name'])): ?> form__input--error<?php endif; ?>" type="text" name="name" id="name" value="<?php if(isset($task) && isset($task['name'])): ?><?= strip_tags($task['name']) ?><?php endif; ?>" placeholder="Введите название">
+        <input class="form__input<?php if (isset($errors['name'])): ?> form__input--error<?php endif; ?>" type="text" name="name" id="name" value="<?php if(isset($task) && isset($task['name'])): ?><?= strip_tags($task['name']) ?><?php endif; ?>" placeholder="Введите название">
 
-        <?php if (isset($errors) && isset($errors['name'])): ?>
+        <?php if (isset($errors['name'])): ?>
             <p class="form__message"><?= $errors['name'] ?></p>
         <?php endif; ?>
     </div>
@@ -14,7 +14,7 @@
     <div class="form__row">
         <label class="form__label" for="project">Проект <sup>*</sup></label>
 
-        <select class="form__input form__input--select<?php if (isset($errors) && isset($errors['project'])): ?> form__input--error<?php endif; ?>" name="project" id="project">
+        <select class="form__input form__input--select<?php if (isset($errors['project'])): ?> form__input--error<?php endif; ?>" name="project" id="project">
             <?php foreach ($projects as $project): ?>
                 <?php if (isset($project['id'])): ?>
                     <option value="<?= strip_tags($project['id']) ?>" <?php if(isset($task) && isset($task['project']) && ($task['project'] === strval($project['id']))): ?>selected<?php endif; ?>><?= strip_tags($project['name']) ?></option>
@@ -22,7 +22,7 @@
             <?php endforeach; ?>
         </select>
 
-        <?php if (isset($errors) && isset($errors['project'])): ?>
+        <?php if (isset($errors['project'])): ?>
             <p class="form__message"><?= $errors['project'] ?></p>
         <?php endif; ?>
     </div>
@@ -30,9 +30,9 @@
     <div class="form__row">
         <label class="form__label" for="date">Дата выполнения</label>
 
-        <input class="form__input form__input--date<?php if (isset($errors) && isset($errors['date'])): ?> form__input--error<?php endif; ?>" type="text" name="date" id="date" value="<?php if(isset($task) && isset($task['date'])): ?><?= strip_tags($task['date']) ?><?php endif; ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
+        <input class="form__input form__input--date<?php if (isset($errors['date'])): ?> form__input--error<?php endif; ?>" type="text" name="date" id="date" value="<?php if(isset($task) && isset($task['date'])): ?><?= strip_tags($task['date']) ?><?php endif; ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
 
-        <?php if (isset($errors) && isset($errors['date'])): ?>
+        <?php if (isset($errors['date'])): ?>
             <p class="form__message"><?= $errors['date'] ?></p>
         <?php endif; ?>
     </div>
@@ -47,13 +47,16 @@
                 <span>Выберите файл</span>
             </label>
 
-            <?php if (isset($errors) && isset($errors['file'])): ?>
+            <?php if (isset($errors['file'])): ?>
                 <p class="form__message"><?= $errors['file'] ?></p>
             <?php endif; ?>
         </div>
     </div>
 
     <div class="form__row form__row--controls">
+        <?php if (isset($errors)): ?>
+            <p class="error-message">Пожалуйста, исправьте ошибки в форме</p>
+        <?php endif; ?>
         <input class="button" type="submit" name="" value="Добавить">
     </div>
 </form>

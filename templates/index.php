@@ -16,7 +16,7 @@
 
     <label class="checkbox">
         <input class="checkbox__input visually-hidden show_completed" type="checkbox" <?php if
-        ($showCompleteTasks === 1): ?>checked<?php endif; ?>>
+        ($showCompletedTasks === 1): ?>checked<?php endif; ?> value="<?= $showCompletedTasks ?>">
         <span class="checkbox__text">Показывать выполненные</span>
     </label>
 </div>
@@ -24,7 +24,7 @@
 <table class="tasks">
     <?php if(isset($tasks) && (!empty($tasks))): ?>
         <?php foreach ($tasks as $task): ?>
-            <?php if ((isset($task['status']) && ($task['status'] === '0')) || ($showCompleteTasks !== 0))
+            <?php if ((isset($task['status']) && ($task['status'] === 0)) || ($showCompletedTasks === 1))
                 : ?>
                 <tr class="tasks__item task <?php if (isset($task['status']) && $task['status']): ?>task--completed<?php endif; ?> <?php  if (isset($task['deadline']) && (checkExpiration($task['deadline']) < 0)): ?>task--important<?php endif; ?>">
                     <td class="task__select">
