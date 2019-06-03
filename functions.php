@@ -209,3 +209,34 @@ function switchTaskStatus($taskId) {
 
     dbInsertData($con, $sql, [$status, $taskId]);
 }
+
+function sendNotification($userId, $userName, $userEmail, $transport) {
+    $tasks = getTodayTasks($userId) ?? null;
+    $time = date('Y-m-d');
+
+    if (!count($tasks)) {
+        return;
+    }
+
+    $tasksNames = array_map(function ($task) {
+        if (isset($task['name'])) {
+            return $task['name'];
+        }
+
+        return null;
+    }, $tasks);
+
+    $tasksNames = implode(', ', $tasksNames);
+
+    $messageBody = "Уважаемый, $userName. У вас запланирована ";
+    $messageBody .= "задача $tasksNames на $time";
+
+    $message = new Swift_Message("Уведомление от сервиса «Дела в порядке»");
+    $message->setTo([$userEmail => $userName]);
+    $message->setBody($messageBody);
+    $message->setFrom("keks@phpdemo.ru", "DoingsDone");
+    $message->setContentType('text/plain');
+
+    $mailer = new Swift_Mailer($transport);
+    $mailer->send($message);
+}

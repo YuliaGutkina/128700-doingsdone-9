@@ -1,7 +1,7 @@
 <h2 class="content__main-heading">Список задач</h2>
 
 <form class="search-form" action="" method="get" autocomplete="off">
-    <input class="search-form__input" type="text" name="search" value="<?php if(isset($search)): ?><?= strip_tags($search) ?><?php endif; ?>" placeholder="Поиск по задачам">
+    <input class="search-form__input" type="text" name="search" aria-label="Search" value="<?php if(isset($search)): ?><?= strip_tags($search) ?><?php endif; ?>" placeholder="Поиск по задачам">
 
     <input class="search-form__submit" type="submit" name="" value="Искать">
 </form>
