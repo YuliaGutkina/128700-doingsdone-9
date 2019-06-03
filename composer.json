@@ -1,0 +1,12 @@
+{
+    "name": "ygutkina/128700-doingsdone-9",
+    "authors": [
+        {
+            "name": "Yulia Gutkina",
+            "email": "m9u.new@yandex.ru"
+        }
+    ],
+    "require": {
+        "swiftmailer/swiftmailer": "^6.0"
+    }
+}

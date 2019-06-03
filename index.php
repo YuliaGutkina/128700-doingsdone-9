@@ -25,6 +25,8 @@ $projectId = $_GET['id'] ?? null;
 $taskDate = $_GET['date'] ?? null;
 $search = $_GET['search'] ?? null;
 
+$showCompletedTasks = (isset($_GET['show_completed']) && ($_GET['show_completed'] === '1')) ? 1 : 0;
+
 $tasks = getTasks($user['id'], $projectId, $taskDate, $search);
 
 if (isset($_GET['id']) && empty($_GET['id'])) {
@@ -41,7 +43,7 @@ if (empty($tasks)) {
 
 $pageContent = include_template('index.php', [
     'tasks' => $tasks,
-    'showCompleteTasks' => $showCompleteTasks
+    'showCompletedTasks' => $showCompletedTasks
 ]);
 
 $layoutContent = include_template('layout.php', [

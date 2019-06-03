@@ -4,9 +4,9 @@
     <div class="form__row">
         <label class="form__label" for="project_name">Название <sup>*</sup></label>
 
-        <input class="form__input<?php if (isset($errors) && isset($errors['name'])): ?> form__input--error<?php endif; ?>" type="text" name="name" id="project_name" value="<?php if(isset($project) && isset($project['name'])): ?><?= strip_tags($project['name']) ?><?php endif; ?>" placeholder="Введите название проекта">
+        <input class="form__input<?php if (isset($errors['name'])): ?> form__input--error<?php endif; ?>" type="text" name="name" id="project_name" value="<?php if(isset($project) && isset($project['name'])): ?><?= strip_tags($project['name']) ?><?php endif; ?>" placeholder="Введите название проекта">
 
-        <?php if (isset($errors) && isset($errors['name'])): ?>
+        <?php if (isset($errors['name'])): ?>
             <p class="form__message"><?= $errors['name'] ?></p>
         <?php endif; ?>
     </div>

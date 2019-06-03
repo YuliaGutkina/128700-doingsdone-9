@@ -8,8 +8,8 @@
             <?= $pageTitle; ?>
         <?php endif; ?>
     </title>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="css/flatpickr.min.css">
 </head>
 

@@ -63,6 +63,17 @@ function getUser($email): ?array {
     return $result[0] ?? null;
 }
 
+function getAllUsers() {
+    $con = DbConnectionProvider::getConnection();
+
+    $sql = 'select id, email, name ';
+    $sql .= 'from users';
+
+    $result = dbFetchData($con, $sql, []);
+
+    return $result;
+}
+
 function getProjects($userId): ?array {
     $con = DbConnectionProvider::getConnection();
 
@@ -82,7 +93,7 @@ function getTasks(int $userId = null, ?int $projectId = null, string $taskDate =
 
     $sql = 'select id, dt_create, status, name, file, deadline, project_id, user_id ';
     $sql .= 'from tasks ';
-    $sql .= ' where user_id = ?';
+    $sql .= 'where user_id = ?';
 
     $parameters = [$userId];
 
@@ -111,6 +122,18 @@ function getTasks(int $userId = null, ?int $projectId = null, string $taskDate =
     }
 
     $result = dbFetchData($con, $sql, $parameters);
+
+    return $result;
+}
+
+function getTodayTasks(int $userId = null) {
+    $con = DbConnectionProvider::getConnection();
+
+    $sql = 'select id, dt_create, status, name, file, deadline, project_id, user_id ';
+    $sql .= 'from tasks ';
+    $sql .= 'where user_id = ? and status = 0 and date(deadline) = date(now())';
+
+    $result = dbFetchData($con, $sql, [$userId]);
 
     return $result;
 }
@@ -185,4 +208,35 @@ function switchTaskStatus($taskId) {
     $status = getTaskStatus($taskId);
 
     dbInsertData($con, $sql, [$status, $taskId]);
+}
+
+function sendNotification($userId, $userName, $userEmail, $transport) {
+    $tasks = getTodayTasks($userId) ?? null;
+    $time = date('Y-m-d');
+
+    if (!count($tasks)) {
+        return;
+    }
+
+    $tasksNames = array_map(function ($task) {
+        if (isset($task['name'])) {
+            return $task['name'];
+        }
+
+        return null;
+    }, $tasks);
+
+    $tasksNames = implode(', ', $tasksNames);
+
+    $messageBody = "Уважаемый, $userName. У вас запланирована ";
+    $messageBody .= "задача $tasksNames на $time";
+
+    $message = new Swift_Message("Уведомление от сервиса «Дела в порядке»");
+    $message->setTo([$userEmail => $userName]);
+    $message->setBody($messageBody);
+    $message->setFrom("keks@phpdemo.ru", "DoingsDone");
+    $message->setContentType('text/plain');
+
+    $mailer = new Swift_Mailer($transport);
+    $mailer->send($message);
 }

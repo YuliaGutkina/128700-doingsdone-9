@@ -10,6 +10,4 @@ if(file_exists('config.php')) {
 require_once('helpers.php');
 require_once('functions.php');
 
-$showCompleteTasks = 1;
-
 session_start();
