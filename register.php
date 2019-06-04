@@ -1,6 +1,12 @@
 <?php
 require_once 'init.php';
 
+if (isset($_SESSION['user'])) {
+    header('Location: index.php');
+
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $required = ['email', 'password', 'name'];
     $errors = [];
