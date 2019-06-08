@@ -1,10 +1,21 @@
 <?php
 define('SECS_IN_HOUR', 3600);
 
-class DbConnectionProvider {
+/**
+ * Класс для создания соедениния
+ * с базой данных
+ */
+class DbConnectionProvider
+{
     protected static $connection;
 
-    public static function getConnection() {
+    /**
+     * Соединяет с базой данных
+     *
+     * @return object Ресурс соединения
+     */
+    public static function getConnection()
+    {
         if (self::$connection === null) {
             self::$connection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
             if (!self::$connection) {
@@ -18,7 +29,16 @@ class DbConnectionProvider {
     }
 }
 
-function checkExpiration($date) {
+/**
+ * Считает количество часов
+ * с текущего момента
+ * до полуночи заданной даты
+ * @param string $date Дата
+ *
+ * @return int Количество часов
+ */
+function checkExpiration($date)
+{
     $tsDate = strtotime($date);
     $tsNow = time();
     $tsDiff = $tsDate - $tsNow;
@@ -27,7 +47,16 @@ function checkExpiration($date) {
     return $hoursDiff;
 }
 
-function dbFetchData($link, $sql, $data = []) {
+/**
+ * Получает записи из базы данных
+ * @param object $link Ресурс соединения
+ * @param string $sql SQL-запрос
+ * @param array $data Параметры запроса
+ *
+ * @return array Записи из базы данных
+ */
+function dbFetchData($link, $sql, $data = [])
+{
     $result = [];
     $stmt = db_get_prepare_stmt($link, $sql, $data);
     mysqli_stmt_execute($stmt);
@@ -40,7 +69,16 @@ function dbFetchData($link, $sql, $data = []) {
     return $result;
 }
 
-function dbInsertData($link, $sql, $data = []) {
+/**
+ * Добавляет новую запись в базу данных
+ * @param object $link Ресурс соединения
+ * @param string $sql SQL-запрос
+ * @param array $data Параметры запроса
+ *
+ * @return int|string Автоматически генерируемый ID, используя последний запрос
+ */
+function dbInsertData($link, $sql, $data = [])
+{
     $stmt = db_get_prepare_stmt($link, $sql, $data);
     $result = mysqli_stmt_execute($stmt);
 
@@ -51,7 +89,16 @@ function dbInsertData($link, $sql, $data = []) {
     return $result;
 }
 
-function getUser($email): ?array {
+/**
+ * Получает из базы данных
+ * данные пользователя
+ * @param string $email Емейл пользователя
+ *
+ * @return array|null Массив данных пользователя
+ * (id, дата регистрации, email, имя, пароль)
+ */
+function getUser($email): ?array
+{
     $con = DbConnectionProvider::getConnection();
 
     $sql = 'select id, dt_reg, email, name, password ';
@@ -63,7 +110,15 @@ function getUser($email): ?array {
     return $result[0] ?? null;
 }
 
-function getAllUsers() {
+/**
+ * Получает из базы данных
+ * данные всех пользователей
+ *
+ * @return array Массив данных пользователей
+ * (id, email, имя)
+ */
+function getAllUsers()
+{
     $con = DbConnectionProvider::getConnection();
 
     $sql = 'select id, email, name ';
@@ -74,7 +129,16 @@ function getAllUsers() {
     return $result;
 }
 
-function getProjects($userId): ?array {
+/**
+ * Получает из базы данных
+ * данные проекта
+ * @param int $userId Id пользователя
+ *
+ * @return array Массив с данными проекта
+ * (id, название, число задач)
+ */
+function getProjects($userId): ?array
+{
     $con = DbConnectionProvider::getConnection();
 
     $sql = 'select p.id, p.name, count(t.id) as tasks_count ';
@@ -88,7 +152,19 @@ function getProjects($userId): ?array {
     return $result;
 }
 
-function getTasks(int $userId = null, ?int $projectId = null, string $taskDate = null, $search = null): array {
+/**
+ * Получает из базы данных
+ * задачи пользователя
+ * @param int $userId Id пользователя
+ * @param int $projectId Id проекта
+ * @param string $taskDate Дата завершения задачи
+ * @param string $search Данные из строки поиска
+ *
+ * @return array Массив с данными задач
+ * (id, дата создания, статус, название, прикрепленный файл, дата завершения, id проекта, id пользователя)
+ */
+function getTasks(int $userId = null, ?int $projectId = null, string $taskDate = null, $search = null): array
+{
     $con = DbConnectionProvider::getConnection();
 
     $sql = 'select id, dt_create, status, name, file, deadline, project_id, user_id ';
@@ -126,7 +202,17 @@ function getTasks(int $userId = null, ?int $projectId = null, string $taskDate =
     return $result;
 }
 
-function getTodayTasks(int $userId = null) {
+/**
+ * Получает из базы данных
+ * задачи пользователя
+ * с датой завершения сегодня
+ * @param int $userId Id пользователя
+ *
+ * @return array Массив с данными задач
+ * (id, дата создания, статус, название, прикрепленный файл, дата завершения, id проекта, id пользователя)
+ */
+function getTodayTasks(int $userId = null)
+{
     $con = DbConnectionProvider::getConnection();
 
     $sql = 'select id, dt_create, status, name, file, deadline, project_id, user_id ';
@@ -138,28 +224,46 @@ function getTodayTasks(int $userId = null) {
     return $result;
 }
 
-function addTask($taskName, $project, $userId, $file, $deadline) {
+/**
+ * Добавляет в базу данных
+ * новую задачу
+ * @param string $taskName Название задачи
+ * @param int $projectId Id проекта
+ * @param int $userId Id пользователя
+ * @param string $file Название файла
+ * @param string $deadline Дата завершения
+ */
+function addTask($taskName, $projectId, $userId, $file, $deadline)
+{
     $con = DbConnectionProvider::getConnection();
     $sql = 'insert into tasks set name = ?, project_id = ?, user_id = ?, file = ?, deadline = ?';
 
-    dbInsertData($con, $sql, [$taskName, $project, $userId, $file, $deadline]);
+    dbInsertData($con, $sql, [$taskName, $projectId, $userId, $file, $deadline]);
 }
 
-function addProject($projectName, $userId) {
+/**
+ * Добавляет в базу данных
+ * новые проект задачу
+ * @param string $projectName Название проекта
+ * @param int $userId Id пользователя
+ */
+function addProject($projectName, $userId)
+{
     $con = DbConnectionProvider::getConnection();
     $sql = 'insert into projects set name = ?, user_id = ?';
 
     dbInsertData($con, $sql, [$projectName, $userId]);
 }
 
-function checkIfDateFuture(string $date) : bool {
-    $today = strtotime('00:00:00');
-    $date = strtotime($date);
-
-    return ($date >= $today);
-}
-
-function addUser($email, $password, $name) {
+/**
+ * Добавляет в базу данных
+ * нового пользователя
+ * @param string $email Email
+ * @param string $password Пароль
+ * @param string $name Имя
+ */
+function addUser($email, $password, $name)
+{
     $con = DbConnectionProvider::getConnection();
     $sql = 'insert into users set email = ?, password = ?, name = ?';
 
@@ -169,7 +273,31 @@ function addUser($email, $password, $name) {
     dbInsertData($con, $sql, [$email, $passwordHash, $name]);
 }
 
-function checkIfUserExist($email) {
+/**
+ * Проверяет является ли
+ * дата будущей
+ * @param string $date Дата
+ *
+ * @return bool
+ */
+function checkIfDateFuture(string $date) : bool
+{
+    $today = strtotime('00:00:00');
+    $date = strtotime($date);
+
+    return ($date >= $today);
+}
+
+/**
+ * Проверяет существует ли
+ * в базе данных
+ * пользователь с данным email
+ * @param string $email Email
+ *
+ * @return bool
+ */
+function checkIfUserExist($email)
+{
     $con = DbConnectionProvider::getConnection();
     $sql = 'select email from users where email = ?';
 
@@ -178,7 +306,18 @@ function checkIfUserExist($email) {
     return !empty($result);
 }
 
-function checkIfProjectExist($userId, $projectName) {
+/**
+ * Проверяет существует ли
+ * в базе данных
+ * проект с данным названием
+ * для данного пользователя
+ * @param int $userId Id пользователя
+ * @param string $projectName Название проекта
+ *
+ * @return bool
+ */
+function checkIfProjectExist($userId, $projectName)
+{
     $con = DbConnectionProvider::getConnection();
     $sql = 'select id from projects where name = ? and user_id = ?';
 
@@ -187,7 +326,15 @@ function checkIfProjectExist($userId, $projectName) {
     return !empty($result);
 }
 
-function getTaskStatus($taskId) {
+/**
+ * Проверяет выполнена ли задача
+ * @param int $taskId Id задачи
+ *
+ * @return int 1 если задача выполнена
+ * 0 если задача не выполнена
+ */
+function getTaskStatus($taskId)
+{
     $con = DbConnectionProvider::getConnection();
     $sql = 'select status from tasks where id = ?';
 
@@ -201,7 +348,12 @@ function getTaskStatus($taskId) {
     return $status;
 }
 
-function switchTaskStatus($taskId) {
+/**
+ * Меняет стутус задачи в базе данных
+ * @param int $taskId Id задачи
+ */
+function switchTaskStatus($taskId)
+{
     $con = DbConnectionProvider::getConnection();
     $sql = "update tasks set status = ? where id = ?";
 
@@ -210,7 +362,20 @@ function switchTaskStatus($taskId) {
     dbInsertData($con, $sql, [$status, $taskId]);
 }
 
-function sendNotification($userId, $userName, $userEmail, $transport) {
+/**
+ * Отправляет email оповещения
+ * о задачах, запланированных на сегодня
+ * всем пользователям,
+ * запланировавшим что-то на сегодня
+ * Для отправки используется
+ * библиотека SwiftMailer
+ * @param int $userId Id пользователя
+ * @param string $userName Имя пользователя
+ * @param string $userEmail Email пользователя
+ * @param object $transport Instance класса Swift_SmtpTransport
+ */
+function sendNotification($userId, $userName, $userEmail, $transport)
+{
     $tasks = getTodayTasks($userId) ?? null;
     $time = date('Y-m-d');
 
